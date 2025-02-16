@@ -17,6 +17,7 @@ export default function Dashboard() {
 
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filteredProperties, setFilteredProperties] = useState([]);
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -43,12 +44,51 @@ export default function Dashboard() {
     fetchProperties();
   }, []); // Dependency array ensures this runs only once
 
-  const handleSearch = (query) => {
-    console.log(query);
-  };
+ // ... existing code ...
+
+ const handleSearch = (query) => {
+  if (!query.trim()) {
+    setFilteredProperties(properties); // Reset to all properties if search is empty
+    return;
+  }
+
+  const searchTerm = query.toLowerCase();
+  const filtered = properties.filter((property) => {
+    // Convert Reference to string to handle number values
+    const reference = String(property.Reference || "").toLowerCase();
+    const title = String(property.Title || "").toLowerCase();
+    return reference.includes(searchTerm) || title.includes(searchTerm);
+  });
+
+  setFilteredProperties(filtered);
+};
+
+// ... existing code ...
 
   const handleFilter = (priceRange) => {
-    console.log(priceRange);
+    const { minPrice, maxPrice } = priceRange;
+    
+    const filtered = properties.filter((property) => {
+      const propertyPrice = Number(property.Price) || 0;
+      
+      // If no price range is set, include the property
+      if (!minPrice && !maxPrice) return true;
+      
+      // If only minPrice is set
+      if (minPrice && !maxPrice) {
+        return propertyPrice >= minPrice;
+      }
+      
+      // If only maxPrice is set
+      if (!minPrice && maxPrice) {
+        return propertyPrice <= maxPrice;
+      }
+      
+      // If both prices are set
+      return propertyPrice >= minPrice && propertyPrice <= maxPrice;
+    });
+
+    setFilteredProperties(filtered);
   };
 
     const navigateToBulkUpload = () => {
@@ -69,6 +109,13 @@ export default function Dashboard() {
         >
           Bulk Upload
         </button>
+        <QuickAddProperty
+            onPropertyAdded={(newProperty) =>
+              setProperties(
+                properties ? [...properties, newProperty] : [newProperty]
+              )
+            }
+          />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -76,13 +123,7 @@ export default function Dashboard() {
         <div className="md:col-span-1 space-y-6">
           <SearchBar onSearch={handleSearch} />
           <FilterSection onFilter={handleFilter} />
-          <QuickAddProperty
-            onPropertyAdded={(newProperty) =>
-              setProperties(
-                properties ? [...properties, newProperty] : [newProperty]
-              )
-            }
-          />
+          
         </div>
 
         {/* Main Content */}
@@ -92,7 +133,7 @@ export default function Dashboard() {
               Loading properties...
             </div>
           ) : (
-            <Table properties={properties} />
+            <Table properties={filteredProperties} />
           )}
         </div>
       </div>

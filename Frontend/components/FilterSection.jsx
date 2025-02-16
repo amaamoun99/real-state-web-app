@@ -7,8 +7,18 @@ export default function FilterSection({ onFilter }) {
   const [maxPrice, setMaxPrice] = useState("");
 
   const handleFilter = () => {
-    const priceRange = `${minPrice}-${maxPrice}`;
+    // Convert string values to numbers or null if empty
+    const priceRange = {
+      minPrice: minPrice ? Number(minPrice) : null,
+      maxPrice: maxPrice ? Number(maxPrice) : null
+    };
     onFilter(priceRange);
+  };
+
+  const handleClear = () => {
+    setMinPrice("");
+    setMaxPrice("");
+    onFilter({ minPrice: null, maxPrice: null });
   };
 
   return (
@@ -35,12 +45,20 @@ export default function FilterSection({ onFilter }) {
             placeholder="Max price"
           />
         </div>
-        <button
-          onClick={handleFilter}
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
-        >
-          Apply Filter
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleFilter}
+            className="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Apply Filter
+          </button>
+          <button
+            onClick={handleClear}
+            className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+          >
+            Clear
+          </button>
+        </div>
       </div>
     </div>
   );
