@@ -43,15 +43,17 @@ export default function Properties() {
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-center text-3xl font-bold text-white mb-6">Our Properties</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+    <div className="container mx-auto py-10 px-4">
+      <h1 className="text-center text-3xl font-bold text-white mb-10">Our Properties</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {properties.length > 0 ? (
           properties.map((property) => (
-            <PropertyCard key={property._id} property={property} />
+            <div key={property._id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <PropertyCard property={property} />
+            </div>
           ))
         ) : (
-          <div className="text-center">No properties available</div>
+          <div className="text-center text-white">No properties available</div>
         )}
       </div>
     </div>

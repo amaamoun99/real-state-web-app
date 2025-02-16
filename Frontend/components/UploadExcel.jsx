@@ -1,6 +1,6 @@
 'use client'; // Required for using hooks in Next.js
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import * as XLSX from 'xlsx';
 import axios from 'axios';
 
@@ -8,6 +8,8 @@ const UploadExcel = () => {
   const [file, setFile] = useState(null); // State to store the selected file
   const [message, setMessage] = useState(''); // State to display success/error messages
   const [isLoading, setIsLoading] = useState(false); // State to handle loading state
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -60,39 +62,118 @@ const UploadExcel = () => {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile?.type.includes('sheet') || droppedFile?.name.match(/\.(xlsx|xls)$/)) {
+      setFile(droppedFile);
+    } else {
+      setMessage('Please upload only Excel files (.xlsx or .xls)');
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 max-w-2xl">
       <h1 className="text-2xl font-bold mb-4">Upload Excel File</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* File Input */}
-        <div>
-          <label className="block text-gray-700 mb-2">Select Excel File</label>
-          <input
-            type="file"
-            accept=".xlsx, .xls" // Allow only Excel files
-            onChange={handleFileChange}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isLoading} // Disable button while loading
-          className={`bg-blue-500 text-white px-4 py-2 rounded ${
-            isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-          }`}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Upload Area */}
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`
+            relative border-2 border-dashed rounded-lg p-8
+            flex flex-col items-center justify-center
+            min-h-[200px] cursor-pointer
+            transition-all duration-200
+            ${isDragging 
+              ? 'border-blue-500 bg-blue-50' 
+              : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+            }
+          `}
         >
-          {isLoading ? 'Uploading...' : 'Upload'}
-        </button>
-      </form>
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleFileChange}
+            className="hidden"
+          />
 
-      {/* Display Success/Error Message */}
-      {message && (
-        <div className={`mt-4 p-4 rounded ${message.includes('Failed') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
-          {message}
+          {/* Upload Icon */}
+          <div className="mb-4">
+            <svg
+              className="w-16 h-16 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+
+          {/* Upload Text */}
+          <p className="text-lg text-gray-600 text-center">
+            {file 
+              ? `Selected: ${file.name}`
+              : 'Drop your Excel file here, or browse'
+            }
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Supports: .xlsx, .xls
+          </p>
         </div>
-      )}
+
+        {/* Upload Button */}
+        {file && (
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`
+              w-full py-3 px-4 rounded-lg
+              text-white font-medium
+              transition-all duration-200
+              ${isLoading 
+                ? 'bg-blue-400 cursor-not-allowed' 
+                : 'bg-blue-500 hover:bg-blue-600'
+              }
+            `}
+          >
+            {isLoading ? 'Uploading...' : 'Upload Excel File'}
+          </button>
+        )}
+
+        {/* Message Display */}
+        {message && (
+          <div className={`
+            p-4 rounded-lg text-center
+            ${message.includes('Failed') 
+              ? 'bg-red-100 text-red-700' 
+              : 'bg-green-100 text-green-700'
+            }
+          `}>
+            {message}
+          </div>
+        )}
+      </form>
     </div>
   );
 };

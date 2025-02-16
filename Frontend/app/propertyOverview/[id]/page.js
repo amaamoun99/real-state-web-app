@@ -5,7 +5,7 @@ import PropertyDetails from '../../../components/PropertyDetails'; // Client Com
 
 // This function runs on the server side, fetching property data based on the dynamic id
 export default async function PropertyPage({ params }) {
-  const { id } = params; // Extract the dynamic ID from the URL
+  const { id } = await params; // Extract the dynamic ID from the URL
 
   let property = null;
   // Fetch property data based on the ID
