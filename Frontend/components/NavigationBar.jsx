@@ -36,7 +36,7 @@ const NavigationBar = () => {
         <div className="flex justify-between h-16">
           {/* Logo/Brand */}
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-800">
+            <Link href="/dashboard" className="text-xl font-bold text-gray-800">
               EGY Bro
             </Link>
           </div>
@@ -65,7 +65,7 @@ const NavigationBar = () => {
               All Properties
             </Link>
 
-            <Link
+            {/* <Link
               href="/admin/upload_Properties"
               className={`px-3 py-2 rounded-md text-sm font-medium ${
                 pathname === "/admin/upload_Properties"
@@ -74,7 +74,7 @@ const NavigationBar = () => {
               }`}
             >
               Upload Properties
-            </Link>
+            </Link> */}
 
             
               <Link
