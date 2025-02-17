@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const AddNewPropertyModal = ({ onClose }) => {
   // Initialize state variables with empty strings or appropriate default values
-  const [status, setStatus] = useState("");
   const [reference, setReference] = useState("");
   const [title, setTitle] = useState("");
   const [bedrooms, setBedrooms] = useState("");
@@ -41,8 +42,18 @@ const AddNewPropertyModal = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Get the token from cookies and decode it to get the user ID
+    const token = Cookies.get("jwt");
+    if (!token) {
+      alert("Please log in to add a property");
+      return;
+    }
+    console.log("token", token);
+
+    const decodedToken = jwtDecode(token);
+    const ownerId = decodedToken.id; // Assuming your token has an 'id' field
+
     const formData = new FormData();
-    formData.append("Status", status);
     formData.append("Reference", reference);
     formData.append("Title", title);
     formData.append("Bedrooms", bedrooms);
@@ -61,7 +72,7 @@ const AddNewPropertyModal = ({ onClose }) => {
     formData.append("Furnished", furnished);
     formData.append("Finishing", finishing);
     formData.append("Unit_Description", unitDescription);
-
+    formData.append("owner", ownerId);
     // Append cover photo if provided
     if (coverPhoto) {
       formData.append("coverPhoto", coverPhoto);
@@ -75,22 +86,35 @@ const AddNewPropertyModal = ({ onClose }) => {
     }
 
     try {
-      const response = await axios.post(
+      // First create the property
+      const propertyResponse = await axios.post(
         `http://localhost:3001/api/v1/properties`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log("Property updated:", response.data);
+
+      // Add property to user's properties using the entered ownerId
+      const propertyId = propertyResponse.data.data.data._id;
+      const userResponse = await axios.post(
+        `http://localhost:3001/api/v1/users/${ownerId}/properties`,
+        { propertyId },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      console.log("Property created:", propertyResponse.data);
+      console.log("Property added to user:", userResponse.data);
       onClose();
     } catch (error) {
-      console.error(
-        "Error creating the property:",
-        error.response?.data || error.message
+      console.error("Error:", error.response?.data || error.message);
+      alert(
+        `Failed to ${
+          error.response?.data ? "add property to user" : "create property"
+        }. Please try again.`
       );
-      // Optionally add user feedback here
-      alert("Failed to create property. Please try again.");
     }
   };
 
@@ -103,17 +127,6 @@ const AddNewPropertyModal = ({ onClose }) => {
           className="grid grid-cols-2 gap-4"
           encType="multipart/form-data"
         >
-          {/* Status */}
-          <div>
-            <label className="block text-gray-700">Status</label>
-            <input
-              type="text"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-            />
-          </div>
-
           {/* Reference */}
           <div>
             <label className="block text-gray-700">Reference</label>

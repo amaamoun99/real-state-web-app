@@ -14,4 +14,6 @@ router
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+router.route("/:id/properties").post(userController.addPropertyToUser);
+
 module.exports = router;

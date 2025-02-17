@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const propertiesSchema = new mongoose.Schema({
   Status: {
     type: String,
+   // enum: ["approved", "rejected", "pending"],
+    default: "pending",
     // required: [true, 'A property must have a status'],
   },
   Reference: {
@@ -93,14 +95,14 @@ const propertiesSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-    required: [true, "Property must have an owner"],
+  //  required: [true, "Property must have an owner"],
   },
 });
 
 propertiesSchema.pre(/^find/, function (next) {
   this.populate({
     path: "owner",
-    select: "name email",
+    select: "name email role",
   });
   next();
 });

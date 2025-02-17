@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,8 +44,8 @@ export default function LoginPage() {
       if (!response.ok) {
         setError(data.message || "Invalid credentials");
       } else {
-        // You might want to store the token in localStorage or cookies here
-        // localStorage.setItem('token', data.token);
+        // Store the token in cookies
+        Cookies.set("jwt", data.token, { expires: 30 }); // expires in 30 days
         router.push("/dashboard");
         router.refresh();
       }

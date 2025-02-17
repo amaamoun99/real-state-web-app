@@ -25,11 +25,26 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin", "superadmin"],
     default: "user",
   },
+  properties: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Property",
+      default: [],
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+// userSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: "properties",
+//     select: "Title Price",
+//   });
+//   next();
+// });
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {
@@ -37,6 +52,8 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
+
+
 
 // Compare password method
 userSchema.methods.comparePassword = async function (candidatePassword) {
