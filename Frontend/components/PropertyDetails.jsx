@@ -19,12 +19,12 @@ export default function PropertyDetails({ property }) {
       {/* Main Property Image with Details Overlay */}
       <div className="relative h-[400px] w-full mb-8">
         <img
-          src={`http://localhost:3001/img/products/${property.images[0]}`}
+          src={`http://localhost:3001/img/products/${property.coverPhoto}`}
           alt={property.Title}
           className="rounded-lg object-cover h-full w-full cursor-pointer"
           onClick={() =>
             handleImageClick(
-              `http://localhost:3001/img/products/${property.images[0]}`
+              `http://localhost:3001/img/products/${property.coverPhoto}`
             )
           }
         />

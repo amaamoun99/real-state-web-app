@@ -5,7 +5,7 @@ import axios from "axios";
 
 const EditPropertyModal = ({ property, onClose }) => {
   // State variables for all property fields with empty string fallbacks
-  const [status, setStatus] = useState(property.Status || "");
+
   const [reference, setReference] = useState(property.Reference || "");
   const [title, setTitle] = useState(property.Title || "");
   const [bedrooms, setBedrooms] = useState(property.Bedrooms || "");
@@ -48,7 +48,6 @@ const EditPropertyModal = ({ property, onClose }) => {
     // If there are files to upload, use FormData
     if (coverPhoto || additionalPhotos.length > 0) {
       const formData = new FormData();
-      formData.append("Status", status);
       formData.append("Reference", reference);
       formData.append("Title", title);
       formData.append("Bedrooms", bedrooms);
@@ -94,7 +93,6 @@ const EditPropertyModal = ({ property, onClose }) => {
     } else {
       // If no files to upload, send regular JSON
       const updateData = {
-        Status: status,
         Reference: reference,
         Title: title,
         Bedrooms: bedrooms,
@@ -142,17 +140,6 @@ const EditPropertyModal = ({ property, onClose }) => {
           className="grid grid-cols-2 gap-4"
           encType="multipart/form-data"
         >
-          {/* Status */}
-          <div>
-            <label className="block text-gray-700">Status</label>
-            <input
-              type="text"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg"
-            />
-          </div>
-
           {/* Reference */}
           <div>
             <label className="block text-gray-700">Reference</label>

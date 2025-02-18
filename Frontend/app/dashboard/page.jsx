@@ -32,8 +32,8 @@ export default function Dashboard() {
         // Check if the response is an array before setting it
         if (Array.isArray(response.data.data.data)) {
           const propertiesData = response.data.data.data;
-          setProperties(propertiesData);
-          setFilteredProperties(propertiesData); // Initialize filteredProperties with all properties
+          setProperties(propertiesData.filter(property => property.Status === "approved"));
+          setFilteredProperties(propertiesData.filter(property => property.Status === "approved")); // Initialize filteredProperties with all properties
         } else {
           throw new Error("Response is not an array");
         }

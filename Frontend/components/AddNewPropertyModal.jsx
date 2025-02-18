@@ -52,6 +52,8 @@ const AddNewPropertyModal = ({ onClose }) => {
 
     const decodedToken = jwtDecode(token);
     const ownerId = decodedToken.id; // Assuming your token has an 'id' field
+    // Check if user is admin or superadmin
+    const isAdminUser = ["admin", "superadmin"].includes(decodedToken.role);
 
     const formData = new FormData();
     formData.append("Reference", reference);
@@ -84,6 +86,9 @@ const AddNewPropertyModal = ({ onClose }) => {
         formData.append("images", photo); // Use 'images' as the field name for multiple photos
       });
     }
+
+    // Add status field based on user role
+    formData.append("Status", isAdminUser ? "approved" : "pending");
 
     try {
       // First create the property
@@ -121,7 +126,7 @@ const AddNewPropertyModal = ({ onClose }) => {
   return (
     <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 overflow-auto ">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg overflow-auto h-[80vh]">
-        <h2 className="text-2xl font-bold mb-4">Edit Property</h2>
+        <h2 className="text-2xl font-bold mb-4">Add New Property</h2>
         <form
           onSubmit={handleSubmit}
           className="grid grid-cols-2 gap-4"
