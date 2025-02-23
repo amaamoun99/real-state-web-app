@@ -13,10 +13,12 @@ app.use(express.json());
 
 //app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:3000', // Your frontend URL
+  origin: 'http://localhost:3000', // frontend URL change to production URL
   credentials: true, // Allow credentials (cookies) to be sent
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+app.options('*', cors());
 
 // Serve static files (e.g., images) from a folder
 app.use('/img', express.static(path.join(__dirname, 'public', 'img')));

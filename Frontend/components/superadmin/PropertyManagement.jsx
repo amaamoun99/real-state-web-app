@@ -66,20 +66,68 @@ export default function PropertyManagement() {
       </div>
 
       <div className="overflow-x-auto max-h-[45vh] overflow-y-auto">
-        <table className="min-w-full divide-y divide-gray-200 ">
+        <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Title
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Reference
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Owner
+                Property Type
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Details
+                Price
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Downpayment
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Remaining
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Purpose
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Compound
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Location
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Size (m²)
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Floor
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Bedrooms
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Bathrooms
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Finishing
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Maids Room
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                ACs
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Furnished
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Description
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Owner
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -93,20 +141,59 @@ export default function PropertyManagement() {
                   {property.Title}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Reference}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
                   <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                     {property.Status}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  {property.owner?.name || "No ownerr"}
+                  {property.Property_Type}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <a
-                    href={`http://localhost:3000/propertyOverview/${property._id}`}
-                    className="text-blue-600 hover:text-blue-900"
-                  >
-                    View Details
-                  </a>
+                  ${property.Price?.toLocaleString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  ${property.Downpayment?.toLocaleString() || "-"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  ${property.Remaining?.toLocaleString() || "-"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Purpose}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Compound}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Map_Location}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{property.Size}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Floors}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Bedrooms}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Bathrooms}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Finishing}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Maids_Room ? "Yes" : "No"}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">{property.ACs}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Furnished}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.Unit_Description}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {property.owner?.name || "No owner"}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button

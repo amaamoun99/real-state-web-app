@@ -22,16 +22,16 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "admin", "superadmin"],
+    enum: ["user", "agent", "admin", "superadmin"],
     default: "user",
   },
-  properties: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Property",
-      default: [],
-    },
-  ],
+  // properties: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "Property",
+  //     default: [],
+  //   },
+  // ],
   createdAt: {
     type: Date,
     default: Date.now,

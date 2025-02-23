@@ -10,16 +10,15 @@ export default function Home() {
           EGY Bro Real Estate
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Your intelligent property management solution with AI-powered sorting
-          and advanced search capabilities
+          Your smart property and user management system for real estate
         </p>
 
         {/* Feature Highlights */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           <FeatureCard
-            icon="🤖"
-            title="AI-Powered Sorting"
-            description="Intelligent organization of property listings"
+            icon="💡"
+            title="Smart Technology"
+            description="Efficient property and user management system"
           />
           <FeatureCard
             icon="🔍"
@@ -53,7 +52,7 @@ export default function Home() {
   );
 }
 
-// Feature Card Component
+
 function FeatureCard({ icon, title, description }) {
   return (
     <div className="p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
