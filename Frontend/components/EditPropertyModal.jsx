@@ -30,6 +30,8 @@ const EditPropertyModal = ({ property, onClose }) => {
   );
   const [coverPhoto, setCoverPhoto] = useState(null); // For updating the cover photo
   const [additionalPhotos, setAdditionalPhotos] = useState([]); // For adding multiple photos
+  const [deletedImages, setDeletedImages] = useState([]);
+  const [coverPhotoDeleted, setCoverPhotoDeleted] = useState(false);
 
   // Handle cover photo file input change
   const handleCoverPhotoChange = (e) => {
@@ -39,6 +41,41 @@ const EditPropertyModal = ({ property, onClose }) => {
   // Handle additional photos file input change
   const handleAdditionalPhotosChange = (e) => {
     setAdditionalPhotos([...e.target.files]); // Store multiple files
+  };
+
+  // Add new handlers for deleting images
+  const handleDeleteCoverPhoto = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this cover photo? This action cannot be undone."
+      )
+    ) {
+      try {
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/properties/${property._id}/coverPhoto`
+        );
+        setCoverPhotoDeleted(true);
+      } catch (error) {
+        console.error("Error deleting cover photo:", error);
+      }
+    }
+  };
+
+  const handleDeleteImage = async (imageName) => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this image? This action cannot be undone."
+      )
+    ) {
+      try {
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/properties/${property._id}/image/${imageName}`
+        );
+        setDeletedImages([...deletedImages, imageName]);
+      } catch (error) {
+        console.error("Error deleting image:", error);
+      }
+    }
   };
 
   // Handle form submission
@@ -354,16 +391,63 @@ const EditPropertyModal = ({ property, onClose }) => {
             />
           </div>
 
+          {/*display the cover photo*/}
+          <div className="col-span-2">
+            <label className="block text-gray-700">Cover Photo</label>
+            {!coverPhotoDeleted && property.coverPhoto && (
+              <div className="relative inline-block">
+                <button
+                  type="button"
+                  onClick={handleDeleteCoverPhoto}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                >
+                  ×
+                </button>
+                <img
+                  src={`http://localhost:3001/img/products/${property.coverPhoto}`}
+                  alt="Cover Photo"
+                  className="w-20 h-20 object-cover rounded-lg"
+                />
+              </div>
+            )}
+          </div>
+
           {/* Additional Photos */}
           <div className="col-span-2">
             <label className="block text-gray-700">Add Additional Photos</label>
             <input
               type="file"
-              multiple // Allow multiple files
+              multiple
               onChange={handleAdditionalPhotosChange}
               className="w-full px-3 py-2 border rounded-lg"
             />
           </div>
+          {/*display the additional photos*/}
+          {property.images.length > 0 && (
+            <div className="col-span-2">
+              <label className="block text-gray-700">Additional Photos</label>
+              <div className="flex gap-2 flex-wrap">
+                {property.images
+                  .filter((photo) => !deletedImages.includes(photo))
+                  .map((photo) => (
+                    <div key={photo} className="relative inline-block">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteImage(photo)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
+                      >
+                        ×
+                      </button>
+                      <img
+                        src={`http://localhost:3001/img/products/${photo}`}
+                        alt="Additional Photo"
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
 
           {/* Buttons */}
           <div className="col-span-2 flex justify-end mt-4">

@@ -51,4 +51,7 @@ router
 
 router.route('/upload').post(uploadExcel.single('file'), propertyController.uploadPropertiesxlxs);
 
+router.delete('/:id/coverPhoto', propertyController.deleteCoverPhoto);
+router.delete('/:id/image/:imageName', propertyController.deleteImage);
+
 module.exports = router;
